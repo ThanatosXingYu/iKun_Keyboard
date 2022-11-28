@@ -24,7 +24,13 @@ pyinstaller iKun_keyboard.spec
 按下 `N` 键后播放 `audios/ni.wav`  
 按下 `T` 键后播放 `audios/tai.wav`  
 按下 `M` 键后播放 `audios/mei.wav`  
+按下 `K` 键后播放 `audios/kun.wav`  
+按下 `W` 键后播放 `audios/wahaha.wav`  
+按下 `A` 键后播放 `audios/aiyo.wav`  
 按下 `Space` 键后播放 `audios/music.wav`  
 按下 `Enter` 键后播放 `audios/niganma.wav`  
+按下 `Backspace` 键后播放 `audios/a.wav`  
 按下 `Ctrl` 键后播放 `audios/ctrl.wav`  
 按下 `Esc` 键退出程序
+
+#### 同时按下 `C X K` 键触发彩蛋

@@ -21,6 +21,10 @@ def mei():
     mixer.music.load('audios/mei.wav')
     mixer.music.play()
 
+def kun():
+    mixer.music.load('audios/kun.wav')
+    mixer.music.play()
+
 def ctrl():
     mixer.music.load('audios/ctrl.wav')
     mixer.music.play()
@@ -31,6 +35,22 @@ def music():
 
 def niganma():
     mixer.music.load('audios/niganma.wav')
+    mixer.music.play()
+
+def a():
+    mixer.music.load('audios/a.wav')
+    mixer.music.play()
+
+def wahaha():
+    mixer.music.load('audios/wahaha.wav')
+    mixer.music.play()
+
+def aiyo():
+    mixer.music.load('audios/aiyo.wav')
+    mixer.music.play()
+
+def jinitaimei():
+    mixer.music.load('audios/jinitaimei.wav')
     mixer.music.play()
 
 
@@ -47,11 +67,19 @@ while True:
         tai()
     elif keyboard.is_pressed("M"):
         mei()
+    elif keyboard.is_pressed("K"):
+        kun()
     elif keyboard.is_pressed("Ctrl"):
         ctrl()
     elif keyboard.is_pressed("Space"):
         music()
     elif keyboard.is_pressed("Enter"):
         niganma()
+    elif keyboard.is_pressed("Backspace"):
+        a()
+    elif keyboard.is_pressed("W"):
+        wahaha()
+    elif keyboard.is_pressed("A"):
+        aiyo()
     elif keyboard.is_pressed("Esc"):
         sys.exit()
