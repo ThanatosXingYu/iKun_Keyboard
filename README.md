@@ -1,4 +1,6 @@
 # iKun_Keyboard
+为~~小黑子~~ikun们打造的专属键盘，非ikun不可用！用上它，你就是千万ikun粉中最靓的仔，无人可敌无人可挡。  
+
 ## 项目背景介绍
 众所周知，早在1867年Christopher Latham Scholes发明QWER键盘时，地球上就已经存在了~~小黑子~~iKun。备受程序员青睐的Ctrl键，就是由C(唱)、T(跳)、R(Rap)，L(篮球)组合而成。
 
@@ -11,7 +13,8 @@ cd iKun_Keyboard
 pyinstaller iKun_keyboard.spec
 ```
 
->方法2
+>方法2  
+
 在[releases](https://github.com/ThanatosXingYu/iKun_Keyboard/releases/tag/ikun)中直接下载
 
 ## 食用说明
