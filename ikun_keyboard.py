@@ -49,9 +49,6 @@ def aiyo():
     mixer.music.load('audios/aiyo.wav')
     mixer.music.play()
 
-def jinitaimei():
-    mixer.music.load('audios/jinitaimei.wav')
-    mixer.music.play()
 
 
 """hotkey = keyboard.read_hotkey()

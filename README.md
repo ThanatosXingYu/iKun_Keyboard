@@ -31,6 +31,4 @@ pyinstaller iKun_keyboard.spec
 按下 `Enter` 键后播放 `audios/niganma.wav`  
 按下 `Backspace` 键后播放 `audios/a.wav`  
 按下 `Ctrl` 键后播放 `audios/ctrl.wav`  
-按下 `Esc` 键退出程序
-
-#### 同时按下 `C X K` 键触发彩蛋
+按下 `Esc` 键退出程序  
