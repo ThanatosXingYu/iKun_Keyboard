@@ -8,6 +8,8 @@ interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
 
 volume = cast(interface, POINTER(IAudioEndpointVolume))
 
+#Establish a bidirectional mapping between audio volume levels and corresponding dB values
+
 AudioToVolume = {0: -65.25, 1: -56.99, 2: -51.67, 3: -47.74, 4: -44.62, 5: -42.03, 6: -39.82, 7: -37.89, 8: -36.17,
                  9: -34.63, 10: -33.24, 11: -31.96, 12: -30.78, 13: -29.68, 14: -28.66, 15: -27.7, 16: -26.8,
                  17: -25.95, 18: -25.15, 19: -24.38, 20: -23.65, 21: -22.96, 22: -22.3, 23: -21.66, 24: -21.05,

@@ -16,7 +16,17 @@ from SysVoiceSetting import *
 
 config = configparser.ConfigParser()
 
-
+DEFAULT_SYS_VOICE = 80
+if os.path.exists('config.ini'):
+    config.read('config.ini')
+    config_voice = config.get('SystemSettings', 'voice', fallback=str(DEFAULT_SYS_VOICE))
+    SetSysVoice(int(config_voice))
+else:
+    config['SystemSettings'] = {
+        'voice': DEFAULT_SYS_VOICE,
+    }
+    with open('config.ini', 'w') as configfile:
+        config.write(configfile)
 
 def quit_window(icon: pystray.Icon):
     icon.stop()
@@ -32,6 +42,7 @@ def SetSystemVoice():
     except ValueError:
         messagebox.showerror("错误", "输入错误")
     else:
+
         if voice > 100 or voice < 0:
             messagebox.showerror("错误","输入数值范围错误")
         else:
@@ -40,6 +51,8 @@ def SetSystemVoice():
             config['SystemSettings'] = {
                 'voice': voice,
             }
+            with open('config.ini', 'w') as configfile:
+                config.write(configfile)
 
 menu = (MenuItem('显示', show_window, default=True),
         Menu.SEPARATOR, MenuItem('隐藏', on_exit),
