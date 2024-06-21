@@ -9,7 +9,7 @@ import configparser
 import pystray
 from pystray import MenuItem, Menu
 from pygame import mixer
-from PIL import Image
+from PIL import Image, ImageTk
 
 from StartupSetting import *
 from SysVoiceSetting import *
@@ -58,8 +58,8 @@ menu = (MenuItem('显示', show_window, default=True),
         Menu.SEPARATOR, MenuItem('隐藏', on_exit),
         Menu.SEPARATOR, MenuItem('退出', quit_window)
         )
-image = Image.open("logo.ico")
-icon = pystray.Icon("icon", image, "iKun键盘", menu)
+image = Image.open("icon.ico")
+icon_pystray = pystray.Icon("icon", image, "iKun键盘", menu)
 
 flag_file = "first_run.flag"
 
@@ -100,9 +100,10 @@ else:
 
 #window = tk.Tk()
 window.title(f'iKun Keyboard Configuration      当前系统音量:{GetSysVoice()}')
+window.iconbitmap('icon.ico')
 window.geometry('700x450')
 #window.protocol('WM_DELETE_WINDOW', on_exit)
-threading.Thread(target=icon.run, daemon=True).start()
+threading.Thread(target=icon_pystray.run, daemon=True).start()
 
 
 label1=tk.Label(window,text='设置下次启动时系统音量(默认 80):',font=('Arial',10))
