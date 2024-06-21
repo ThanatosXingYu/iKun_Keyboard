@@ -1,82 +1,118 @@
-from pygame import mixer
-import keyboard
+import os
 import sys
+import threading
+import tkinter as tk
+from tkinter import messagebox
 
-mixer.init()        #假惺惺的初始化一下
-mixer.music.set_volume(20)
+import keyboard
+import configparser
+import pystray
+from pystray import MenuItem, Menu
+from pygame import mixer
+from PIL import Image
 
-def ji():
-    mixer.music.load('audios/ji.wav')
-    mixer.music.play()
+from StartupSetting import *
+from SysVoiceSetting import *
 
-def ni():
-    mixer.music.load('audios/ni.wav')
-    mixer.music.play()
-
-def tai():
-    mixer.music.load('audios/tai.wav')
-    mixer.music.play()
-
-def mei():
-    mixer.music.load('audios/mei.wav')
-    mixer.music.play()
-
-def kun():
-    mixer.music.load('audios/kun.wav')
-    mixer.music.play()
-
-def ctrl():
-    mixer.music.load('audios/ctrl.wav')
-    mixer.music.play()
-
-def music():
-    mixer.music.load('audios/music.wav')
-    mixer.music.play()
-
-def niganma():
-    mixer.music.load('audios/niganma.wav')
-    mixer.music.play()
-
-def a():
-    mixer.music.load('audios/a.wav')
-    mixer.music.play()
-
-def wahaha():
-    mixer.music.load('audios/wahaha.wav')
-    mixer.music.play()
-
-def aiyo():
-    mixer.music.load('audios/aiyo.wav')
-    mixer.music.play()
+config = configparser.ConfigParser()
 
 
 
-"""hotkey = keyboard.read_hotkey()
-keyboard.add_hotkey(hotkey, ji)
-print(hotkey)"""
+def quit_window(icon: pystray.Icon):
+    icon.stop()
+    window.destroy()
+def show_window():
+    window.deiconify()
+def on_exit():
+    window.withdraw()
+def SetSystemVoice():
+    voiceEntry = entry1.get()
+    try :
+        voice = int(voiceEntry)
+    except ValueError:
+        messagebox.showerror("错误", "输入错误")
+    else:
+        if voice > 100 or voice < 0:
+            messagebox.showerror("错误","输入数值范围错误")
+        else:
+            SetSysVoice(voice)
+            window.title(f'iKun Keyboard Configuration      当前系统音量:{GetSysVoice()}')
+            config['SystemSettings'] = {
+                'voice': voice,
+            }
 
-while True:
-    if keyboard.is_pressed("J"):
-        ji()
-    elif keyboard.is_pressed("N"):
-        ni()
-    elif keyboard.is_pressed("T"):
-        tai()
-    elif keyboard.is_pressed("M"):
-        mei()
-    elif keyboard.is_pressed("K"):
-        kun()
-    elif keyboard.is_pressed("Ctrl"):
-        ctrl()
-    elif keyboard.is_pressed("Space"):
-        music()
-    elif keyboard.is_pressed("Enter"):
-        niganma()
-    elif keyboard.is_pressed("Backspace"):
-        a()
-    elif keyboard.is_pressed("W"):
-        wahaha()
-    elif keyboard.is_pressed("A"):
-        aiyo()
-    elif keyboard.is_pressed("Esc"):
-        sys.exit()
+menu = (MenuItem('显示', show_window, default=True),
+        Menu.SEPARATOR, MenuItem('隐藏', on_exit),
+        Menu.SEPARATOR, MenuItem('退出', quit_window)
+        )
+image = Image.open("logo.ico")
+icon = pystray.Icon("icon", image, "iKun键盘", menu)
+
+flag_file = "first_run.flag"
+
+def isHideorNot(var):
+    if var.get()=='1':
+        with open(flag_file, "w") as f:
+            f.write("hide")
+    if var.get()=='0':
+        try:
+            os.remove(flag_file)
+        except Exception as e:
+            pass
+def toggle_window(window):
+    window.withdraw()
+
+def on_closing(window):
+    with open(flag_file, "w") as f:
+        f.write("hide")
+    window.destroy()
+
+if os.path.exists(flag_file):
+    with open(flag_file, "r") as f:
+        flag = f.read().strip()
+    if flag == "hide":
+        # 如果标记文件中内容为 "hide"，则隐藏窗口
+        window = tk.Tk()
+        window.withdraw()
+    else:
+        # 否则，显示窗口并创建标记文件
+        window = tk.Tk()
+        window.deiconify()
+        window.protocol("WM_DELETE_WINDOW", lambda: on_closing(window))
+else:
+    # 如果标记文件不存在，说明是第一次运行，显示窗口并创建标记文件
+    window = tk.Tk()
+    window.deiconify()
+    window.protocol("WM_DELETE_WINDOW", lambda: on_closing(window))
+
+#window = tk.Tk()
+window.title(f'iKun Keyboard Configuration      当前系统音量:{GetSysVoice()}')
+window.geometry('700x450')
+#window.protocol('WM_DELETE_WINDOW', on_exit)
+threading.Thread(target=icon.run, daemon=True).start()
+
+
+label1=tk.Label(window,text='设置下次启动时系统音量(默认 80):',font=('Arial',10))
+label1.grid(column=0,row=0,padx=(0,5),sticky="w")
+label2=tk.Label(window,text='设置下次启动是否隐藏窗口运行(默认 是):',font=('Arial',10))
+label2.grid(column=0,row=1,padx=(0,5),sticky="w")
+
+entry1=tk.Entry(window,font=('Arial',10),width=7)
+entry1.grid(column=1,row=0)
+entry1.insert(0,"80")
+
+button1=tk.Button(window,text="确定",font=('Arial',10),command=SetSystemVoice)
+button1.grid(column=2,row=0,padx=(5,0))
+button2=tk.Button(window,text="设置开机自启动",font=('Arial',10),command=lambda :execute("set"))
+button2.grid(column=0,row=2,padx=(5,0),pady=(10,0),sticky="w")
+button3=tk.Button(window,text="取消开机自启动",font=('Arial',10),command=lambda :execute("cancel"))
+button3.grid(column=0,row=2,padx=(150,0),pady=(10,0),sticky="w")
+
+var=tk.StringVar()
+radiobutton1=tk.Radiobutton(window,text="是",variable=var,value="1",command=lambda :isHideorNot(var))
+radiobutton1.grid(column=1,row=1)
+radiobutton2=tk.Radiobutton(window,text="否",variable=var,value="0",command=lambda :isHideorNot(var))
+radiobutton2.grid(column=2,row=1)
+
+
+window.mainloop()
