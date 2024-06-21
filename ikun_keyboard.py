@@ -2,7 +2,7 @@ import os
 import sys
 import threading
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk, filedialog
 
 import keyboard
 import configparser
@@ -83,7 +83,7 @@ def on_closing(window):
 if os.path.exists(flag_file):
     with open(flag_file, "r") as f:
         flag = f.read().strip()
-    if flag == "hide":
+    if flag == "HIDE":
         # 如果标记文件中内容为 "hide"，则隐藏窗口
         window = tk.Tk()
         window.withdraw()
@@ -112,21 +112,36 @@ label2=tk.Label(window,text='设置下次启动是否隐藏窗口运行(默认 �
 label2.grid(column=0,row=1,padx=(0,5),sticky="w")
 
 entry1=tk.Entry(window,font=('Arial',10),width=7)
-entry1.grid(column=1,row=0)
+entry1.grid(column=1,row=0,pady=(5,0))
 entry1.insert(0,"80")
 
 button1=tk.Button(window,text="确定",font=('Arial',10),command=SetSystemVoice)
-button1.grid(column=2,row=0,padx=(5,0))
+button1.grid(column=2,row=0,padx=(5,0),pady=(5,0))
 button2=tk.Button(window,text="设置开机自启动",font=('Arial',10),command=lambda :execute("set"))
-button2.grid(column=0,row=2,padx=(5,0),pady=(10,0),sticky="w")
+button2.grid(column=3,row=0,padx=(35,0),pady=(5,0),sticky="w")
 button3=tk.Button(window,text="取消开机自启动",font=('Arial',10),command=lambda :execute("cancel"))
-button3.grid(column=0,row=2,padx=(150,0),pady=(10,0),sticky="w")
+button3.grid(column=4,row=0,padx=(30,0),pady=(5,0),sticky="w")
 
 var=tk.StringVar()
 radiobutton1=tk.Radiobutton(window,text="是",variable=var,value="1",command=lambda :isHideorNot(var))
 radiobutton1.grid(column=1,row=1)
 radiobutton2=tk.Radiobutton(window,text="否",variable=var,value="0",command=lambda :isHideorNot(var))
 radiobutton2.grid(column=2,row=1)
+
+sep1 = ttk.Separator(window, orient='horizontal')
+sep1.grid(column=0,row=3, padx=5, pady=45, sticky='ew')
+sep2 = ttk.Separator(window, orient='horizontal')
+sep2.grid(column=2,  row=3, pady=45,sticky='ew')
+sep3 = ttk.Separator(window, orient='horizontal')
+sep3.grid(column=3, row=3, pady=45,sticky='ew')
+sep_label = tk.Label(window, text="自定义键盘映射",font=('Arial',10))
+sep_label.grid(column=1, row=3, padx=10)
+
+
+#Keyboard mapper
+key_entry=tk.Entry(window,width=10)
+key_entry.grid(column=0,row=4,padx=10,pady=(0,400),sticky="w")
+key_entry.insert(0, "输入按键")
 
 
 window.mainloop()
