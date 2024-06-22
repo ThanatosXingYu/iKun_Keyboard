@@ -15,6 +15,7 @@ from PIL import Image, ImageTk
 from StartupSetting import *
 from SysVoiceSetting import *
 
+mixer.init()
 config = configparser.ConfigParser()
 
 DEFAULT_SYS_VOICE = 80
@@ -150,23 +151,59 @@ sep_label.grid(column=1, row=3, padx=10)
 
 
 #Keyboard mapper
+def choose_file():
+    global file_path
+    file_path = filedialog.askopenfilename(filetypes=[("音频文件", "*.wav *.mp3")])
+
+def add_mapping():
+    key = key_entry.get()
+    if 'file_path' in globals() and key != "按键":
+        mappings[key] = file_path
+        update_listbox()
+        key_entry.delete(0, tk.END)
+        key_entry.insert(0, "按键")
+
+def update_listbox():
+    global mappings
+    mapping_listbox.delete(0, tk.END)
+    for key, file in mappings.items():
+        absolute_path = os.path.abspath(file)
+        mapping_listbox.insert(tk.END, f"{key}: {absolute_path}")
+
+def delete_mapping():
+    selection = mapping_listbox.curselection()
+    if selection:
+        key = mapping_listbox.get(selection[0]).split(":")[0]
+        del mappings[key]
+        update_listbox()
+
+def start_listening():
+    for key in mappings:
+        keyboard.on_press_key(key, lambda e, k=key: play_sound(k))
+
+def play_sound(key):
+    sound_file = mappings.get(key)
+    if sound_file:
+        mixer.Sound(sound_file).play()
+
 key_entry=tk.Entry(window,width=10)
 key_entry.place(x=10,y=125)
 key_entry.insert(0, "输入按键")
 
-file_button = tk.Button(window, text="选择音频文件")
+file_button = tk.Button(window, text="选择音频文件",command=choose_file)
 file_button.place(x=110,y=120)
 
-add_button = tk.Button(window, text="添加映射")
+add_button = tk.Button(window, text="添加映射",command=add_mapping)
 add_button.place(x=220,y=120)
 
-delete_button = tk.Button(window, text="删除选中映射")
+delete_button = tk.Button(window, text="删除选中映射",command=delete_mapping)
 delete_button.place(x=300,y=120)
 
 mapping_listbox = tk.Listbox(window, width=95,height=15)
 mapping_listbox.place(x=10,y=160)
 for key, file in mappings.items():
-    mapping_listbox.insert(tk.END, f"{key}: {file}")
+    absolute_path = os.path.abspath(file)
+    mapping_listbox.insert(tk.END, f"{key}: {absolute_path}")
 
-
+start_listening()
 window.mainloop()
