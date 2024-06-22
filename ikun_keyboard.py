@@ -140,8 +140,19 @@ sep_label.grid(column=1, row=3, padx=10)
 
 #Keyboard mapper
 key_entry=tk.Entry(window,width=10)
-key_entry.grid(column=0,row=4,padx=10,pady=(0,400),sticky="w")
+key_entry.place(x=10,y=125)
 key_entry.insert(0, "输入按键")
 
+file_button = tk.Button(window, text="选择音频文件")
+file_button.place(x=110,y=120)
+
+add_button = tk.Button(window, text="添加映射")
+add_button.place(x=220,y=120)
+
+delete_button = tk.Button(window, text="删除选中映射")
+delete_button.place(x=300,y=120)
+
+mapping_listbox = tk.Listbox(window, width=95,height=15)
+mapping_listbox.place(x=10,y=160)
 
 window.mainloop()
