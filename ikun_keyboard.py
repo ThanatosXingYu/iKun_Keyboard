@@ -1,6 +1,4 @@
 import io
-import os
-import sys
 import threading
 import tkinter as tk
 from tkinter import messagebox, ttk, filedialog
@@ -95,7 +93,7 @@ def on_closing(window):
 if os.path.exists(flag_file):
     with open(flag_file, "r") as f:
         flag = f.read().strip()
-    if flag == "HIDE":
+    if flag == "hide":
         # 如果标记文件中内容为 "hide"，则隐藏窗口
         window = tk.Tk()
         window.withdraw()
