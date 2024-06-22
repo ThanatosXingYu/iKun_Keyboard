@@ -10,7 +10,7 @@ import configparser
 import pystray
 from pystray import MenuItem, Menu
 from pygame import mixer
-from PIL import Image, ImageTk
+from PIL import Image
 
 from StartupSetting import *
 from SysVoiceSetting import *
@@ -20,7 +20,7 @@ config = configparser.ConfigParser()
 
 DEFAULT_SYS_VOICE = 80
 mappings = {}
-is_listening = False
+is_listening = True
 
 if os.path.exists('config.ini'):
     with io.open('config.ini', 'r', encoding='utf-8') as f:
@@ -133,6 +133,8 @@ button2=tk.Button(window,text="设置开机自启动",font=('Arial',10),command=
 button2.grid(column=3,row=0,padx=(35,0),pady=(5,0),sticky="w")
 button3=tk.Button(window,text="取消开机自启动",font=('Arial',10),command=lambda :execute("cancel"))
 button3.grid(column=4,row=0,padx=(30,0),pady=(5,0),sticky="w")
+button4=tk.Button(window,text="隐藏窗口至托盘",font=('Arial',10),command=on_exit)
+button4.grid(column=3,row=1,padx=(35,0),pady=(5,0),sticky="w")
 
 var=tk.StringVar()
 radiobutton1=tk.Radiobutton(window,text="是",variable=var,value="1",command=lambda :isHide(var))
@@ -149,8 +151,20 @@ sep3.grid(column=3, row=3, pady=45,sticky='ew')
 sep_label = tk.Label(window, text="自定义键盘映射",font=('Arial',10))
 sep_label.grid(column=1, row=3, padx=10)
 
-
 #Keyboard mapper
+def toggle_listening():
+    global is_listening
+    if is_listening:
+        stop_listening()
+        toggle_button.config(text="启动")
+        status_label = tk.Label(window, text="当前状态：已停止", font=('Arial', 10), fg="red")
+        status_label.place(x=570, y=95)
+    else:
+        start_listening()
+        toggle_button.config(text="停止")
+        status_label = tk.Label(window, text="当前状态：已启动", font=('Arial', 10), fg="green")
+        status_label.place(x=570, y=95)
+    is_listening = not is_listening
 def choose_file():
     global file_path
     file_path = filedialog.askopenfilename(filetypes=[("音频文件", "*.wav *.mp3")])
@@ -162,7 +176,11 @@ def add_mapping():
         update_listbox()
         key_entry.delete(0, tk.END)
         key_entry.insert(0, "按键")
-
+        config = configparser.ConfigParser()
+        config.read('config.ini', encoding='utf-8')
+        config.set('KeySettings', key, file_path)
+        with open('config.ini', 'w', encoding='utf-8') as configfile:
+            config.write(configfile)
 def update_listbox():
     global mappings
     mapping_listbox.delete(0, tk.END)
@@ -176,10 +194,18 @@ def delete_mapping():
         key = mapping_listbox.get(selection[0]).split(":")[0]
         del mappings[key]
         update_listbox()
+        config = configparser.ConfigParser()
+        config.read('config.ini', encoding='utf-8')
+        if config.has_option('KeySettings', key):
+            config.remove_option('KeySettings', key)
+            with open('config.ini', 'w', encoding='utf-8') as configfile:
+                config.write(configfile)
 
 def start_listening():
     for key in mappings:
         keyboard.on_press_key(key, lambda e, k=key: play_sound(k))
+def stop_listening():
+    keyboard.unhook_all()
 
 def play_sound(key):
     sound_file = mappings.get(key)
@@ -204,6 +230,12 @@ mapping_listbox.place(x=10,y=160)
 for key, file in mappings.items():
     absolute_path = os.path.abspath(file)
     mapping_listbox.insert(tk.END, f"{key}: {absolute_path}")
+
+toggle_button=tk.Button(window,text="停止",command=toggle_listening)
+toggle_button.place(x=600,y=120)
+
+status_label=tk.Label(window,text="当前状态：已启动",font=('Arial',10),fg="green")
+status_label.place(x=570,y=95)
 
 start_listening()
 window.mainloop()
