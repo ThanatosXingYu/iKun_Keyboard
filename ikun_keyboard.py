@@ -1,3 +1,4 @@
+import io
 import os
 import sys
 import threading
@@ -17,10 +18,20 @@ from SysVoiceSetting import *
 config = configparser.ConfigParser()
 
 DEFAULT_SYS_VOICE = 80
+mappings = {}
+is_listening = False
+
 if os.path.exists('config.ini'):
-    config.read('config.ini')
+    with io.open('config.ini', 'r', encoding='utf-8') as f:
+        config.read_file(f)
     config_voice = config.get('SystemSettings', 'voice', fallback=str(DEFAULT_SYS_VOICE))
     SetSysVoice(int(config_voice))
+
+
+    if 'KeySettings' in config:
+        for key in config['KeySettings']:
+            mappings[key] = config['KeySettings'][key]
+
 else:
     config['SystemSettings'] = {
         'voice': DEFAULT_SYS_VOICE,
@@ -63,7 +74,7 @@ icon_pystray = pystray.Icon("icon", image, "iKun键盘", menu)
 
 flag_file = "first_run.flag"
 
-def isHideorNot(var):
+def isHide(var):
     if var.get()=='1':
         with open(flag_file, "w") as f:
             f.write("hide")
@@ -123,9 +134,9 @@ button3=tk.Button(window,text="取消开机自启动",font=('Arial',10),command=
 button3.grid(column=4,row=0,padx=(30,0),pady=(5,0),sticky="w")
 
 var=tk.StringVar()
-radiobutton1=tk.Radiobutton(window,text="是",variable=var,value="1",command=lambda :isHideorNot(var))
+radiobutton1=tk.Radiobutton(window,text="是",variable=var,value="1",command=lambda :isHide(var))
 radiobutton1.grid(column=1,row=1)
-radiobutton2=tk.Radiobutton(window,text="否",variable=var,value="0",command=lambda :isHideorNot(var))
+radiobutton2=tk.Radiobutton(window,text="否",variable=var,value="0",command=lambda :isHide(var))
 radiobutton2.grid(column=2,row=1)
 
 sep1 = ttk.Separator(window, orient='horizontal')
@@ -154,5 +165,8 @@ delete_button.place(x=300,y=120)
 
 mapping_listbox = tk.Listbox(window, width=95,height=15)
 mapping_listbox.place(x=10,y=160)
+for key, file in mappings.items():
+    mapping_listbox.insert(tk.END, f"{key}: {file}")
+
 
 window.mainloop()
