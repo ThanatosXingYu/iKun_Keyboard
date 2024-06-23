@@ -2,7 +2,6 @@ import io
 import threading
 import tkinter as tk
 from tkinter import messagebox, ttk, filedialog
-
 import keyboard
 import configparser
 import pystray
@@ -19,6 +18,7 @@ config = configparser.ConfigParser()
 DEFAULT_SYS_VOICE = 80
 mappings = {}
 is_listening = True
+flag_file = "first_run.flag"
 
 if os.path.exists('config.ini'):
     with io.open('config.ini', 'r', encoding='utf-8') as f:
@@ -41,10 +41,13 @@ else:
 def quit_window(icon: pystray.Icon):
     icon.stop()
     window.destroy()
+
 def show_window():
     window.deiconify()
+
 def on_exit():
     window.withdraw()
+
 def SetSystemVoice():
     voiceEntry = entry1.get()
     try :
@@ -71,17 +74,15 @@ menu = (MenuItem('显示', show_window, default=True),
 image = Image.open("icon.ico")
 icon_pystray = pystray.Icon("icon", image, "iKun键盘", menu)
 
-flag_file = "first_run.flag"
-
 def isHide(var):
-    if var.get()=='1':
+    if var.get() == '1':
         with open(flag_file, "w") as f:
             f.write("hide")
-    if var.get()=='0':
+    if var.get() == '0':
         try:
             os.remove(flag_file)
         except Exception as e:
-            pass
+            messagebox.showerror("错误",e)
 def toggle_window(window):
     window.withdraw()
 
@@ -200,6 +201,7 @@ def delete_mapping():
                 config.write(configfile)
 
 def start_listening():
+    keyboard.add_hotkey('esc', lambda :quit_window(icon_pystray))
     for key in mappings:
         keyboard.on_press_key(key, lambda e, k=key: play_sound(k))
 def stop_listening():

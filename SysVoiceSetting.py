@@ -39,7 +39,6 @@ VolumeToAudio = {-65.25: 0, -56.99: 1, -51.67: 2, -47.74: 3, -44.62: 4, -42.03: 
 def GetSysVoice():
     SysVoiceLevel = round(volume.GetMasterVolumeLevel(), 2)
     voice = VolumeToAudio[SysVoiceLevel]
-    #print(voice)
     return voice
 
 

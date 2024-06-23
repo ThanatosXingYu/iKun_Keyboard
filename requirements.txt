@@ -1,0 +1,8 @@
+comtypes==1.4.4
+keyboard==0.13.5
+Pillow==9.5.0
+psutil==6.0.0
+pycaw==20240210
+pygame==2.5.2
+pystray==0.19.5
+six==1.16.0
