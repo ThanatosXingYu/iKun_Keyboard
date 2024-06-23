@@ -5,20 +5,28 @@
 众所周知，早在1867年Christopher Latham Scholes发明QWER键盘时，地球上就已经存在了~~小黑子~~iKun。备受程序员青睐的Ctrl键，就是由C(唱)、T(跳)、R(Rap)，L(篮球)组合而成。
 
 ## 食用方法
->方法1
+>方法1 打包EXE(无Python环境)
 ### 安装pyinstaller(已安装请忽略)
 ```
 git clone https://github.com/ThanatosXingYu/iKun_Keyboard.git
 cd iKun_Keyboard
-pyinstaller iKun_keyboard.spec
+pyinstaller iKunKeyboard.spec
 ```
 
->方法2  
+>方法2 有Python环境
+```
+git clone https://github.com/ThanatosXingYu/iKun_Keyboard.git
+cd iKun_Keyboard
+pip install -r requirements.txt
+python iKun_Keyboard.py
+```
+>方法3
 
-在[releases](https://github.com/ThanatosXingYu/iKun_Keyboard/releases/tag/ikun)中直接下载
+在[releases](https://github.com/ThanatosXingYu/iKun_Keyboard/releases/tag/ikun)中直接下载解压
 
 ## 食用说明
-运行后程序将在后台运行
+首次运行将会弹出配置窗口，可设置下次运行是否隐藏启动和自定义键盘映射等  
+如果要自定义键盘映射请将音频格式转为wav或mp3，否则程序无法正常加载，可以在程序配置页自动添加，也可以阅读config.ini文件后根据格式手动添加
 ### 效果
 按下 `J` 键后播放 `audios/ji.wav`  
 按下 `N` 键后播放 `audios/ni.wav`  
