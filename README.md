@@ -22,7 +22,7 @@ python iKun_Keyboard.py
 ```
 >方法3
 
-在[releases](https://github.com/ThanatosXingYu/iKun_Keyboard/releases/tag/ikun)中直接下载解压
+在[releases](https://github.com/ThanatosXingYu/iKun_Keyboard/releases)中直接下载解压
 
 ## 食用说明
 首次运行将会弹出配置窗口，可设置下次运行是否隐藏启动和自定义键盘映射等  
